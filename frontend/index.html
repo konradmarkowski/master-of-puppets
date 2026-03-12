@@ -16,12 +16,23 @@
         .sidebar { width: 270px; min-width: 200px; background: #13151b; border-right: 1px solid #222; display: flex; flex-direction: column; }
         .sidebar h2 { padding: 0.7rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #888; border-bottom: 1px solid #222; }
         .pipeline-list { flex: 1; overflow-y: auto; padding: 0.3rem; }
-        .pipeline-item { padding: 0.4rem 0.6rem; margin-bottom: 1px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-family: 'Cascadia Code','Fira Code',monospace; transition: background .15s; word-break: break-all; }
+        .pipeline-item { padding: 0.3rem 0.5rem 0.3rem 0; margin-bottom: 1px; border-radius: 5px; cursor: pointer; font-size: 0.72rem; font-family: 'Cascadia Code','Fira Code',monospace; transition: background .15s; word-break: break-all; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .pipeline-item:hover { background: #1e2030; }
         .pipeline-item.active { background: #1a2744; color: #5b9aff; font-weight: 600; }
-        .ext { display: inline-block; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; margin-right: 4px; font-weight: 700; }
+        .ext { display: inline-block; font-size: 0.58rem; padding: 1px 4px; border-radius: 3px; margin-right: 3px; font-weight: 700; }
         .ext-slp { background: #0f3460; color: #5b9aff; }
         .ext-slt { background: #2d1a45; color: #c77dff; }
+
+        /* ── Folder tree ── */
+        .folder { margin-bottom: 1px; }
+        .folder-header { display: flex; align-items: center; gap: 4px; padding: 0.35rem 0.5rem; border-radius: 5px; cursor: pointer; font-size: 0.74rem; font-weight: 600; color: #999; transition: background .15s; user-select: none; }
+        .folder-header:hover { background: #1e2030; color: #ccc; }
+        .folder-arrow { font-size: 0.6rem; width: 12px; text-align: center; transition: transform .15s; color: #555; }
+        .folder-arrow.open { transform: rotate(90deg); }
+        .folder-icon { font-size: 0.8rem; }
+        .folder-children { padding-left: 0.7rem; overflow: hidden; }
+        .folder-children.collapsed { display: none; }
+        .folder-count { font-size: 0.6rem; color: #444; margin-left: auto; }
 
         /* ── Main area ── */
         .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -129,14 +140,48 @@
         /* ── Dev detail panel ── */
         .dev-detail h3 { color: #4caf50; }
         .pseudo-block { background: #0d1117; border: 1px solid #1e2030; border-radius: 6px; padding: 0.8rem; font-family: 'Cascadia Code','Fira Code',monospace; font-size: 0.76rem; color: #8cc265; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; }
+
+        /* ── Global view tabs ── */
+        .global-tabs { display: flex; gap: 2px; margin-left: auto; }
+        .global-tab { background: none; border: none; color: #666; font-size: 0.82rem; padding: 0.3rem 0.9rem; border-radius: 5px; cursor: pointer; transition: all .15s; }
+        .global-tab:hover { color: #ccc; background: #1a1d26; }
+        .global-tab.active { color: #e94560; background: #1a1a2e; font-weight: 600; }
+
+        /* ── Landscape view ── */
+        #landscapeView { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+        #landscapeView.active { display: flex; }
+        .ls-toolbar { padding: 0.5rem 1rem; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 1rem; background: #13151b; flex-shrink: 0; }
+        .ls-toolbar label { font-size: 0.75rem; color: #888; }
+        .ls-toolbar select, .ls-toolbar input[type=checkbox] { accent-color: #e94560; }
+        .ls-toolbar select { background: #1a1d26; border: 1px solid #333; color: #ccc; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; }
+        .ls-stats { margin-left: auto; font-size: 0.72rem; color: #555; }
+        .ls-wrap { flex: 1; position: relative; overflow: hidden; background: #0d0f14; }
+        .ls-wrap svg { width: 100%; height: 100%; }
+        .ls-legend { position: absolute; bottom: 10px; left: 10px; background: #13151bee; border: 1px solid #222; border-radius: 8px; padding: 0.6rem 0.9rem; font-size: 0.68rem; z-index: 10; max-height: 50vh; overflow-y: auto; }
+        .ls-legend-title { font-weight: 700; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+        .ls-legend-row { display: flex; align-items: center; gap: 6px; padding: 2px 0; color: #aaa; }
+        .ls-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .ls-detail-panel { position: absolute; top: 0; right: 0; width: 340px; height: 100%; background: #13151b; border-left: 1px solid #222; overflow-y: auto; padding: 1rem; font-size: 0.78rem; z-index: 10; display: none; }
+        .ls-detail-panel.open { display: block; }
+        .ls-detail-panel h3 { font-size: 0.95rem; color: #e94560; border-bottom: 1px solid #222; padding-bottom: 0.4rem; margin-bottom: 0.6rem; }
+        .ls-node circle { cursor: pointer; transition: all .15s; }
+        .ls-node circle:hover { filter: brightness(1.4); }
+        .ls-node text { font-size: 9px; fill: #bbb; pointer-events: none; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .ls-edge { fill: none; stroke-opacity: 0.4; }
+        .ls-edge:hover { stroke-opacity: 1; stroke-width: 2.5; }
+        .ls-edge.task-edge { stroke-dasharray: 5,3; }
     </style>
 </head>
 <body>
     <header>
         <h1>Master of Puppets</h1>
         <span>SnapLogic Pipeline Explorer</span>
+        <div class="global-tabs">
+            <button class="global-tab active" data-view="pipelines">Pipelines</button>
+            <button class="global-tab" data-view="landscape">Landscape</button>
+        </div>
     </header>
-    <div class="container">
+    <div class="container" id="pipelinesView">
         <aside class="sidebar">
             <h2>Pipelines &amp; Tasks</h2>
             <div class="pipeline-list" id="pipelineList"><div class="placeholder">Loading...</div></div>
@@ -153,6 +198,26 @@
         </div>
     </div>
 
+    <!-- ── Landscape View ── -->
+    <div id="landscapeView">
+        <div class="ls-toolbar">
+            <label>Project:</label>
+            <select id="lsProjectFilter"><option value="__all__">All projects</option></select>
+            <label><input type="checkbox" id="lsShowTasks" checked/> Tasks</label>
+            <label><input type="checkbox" id="lsShowExternal" checked/> External refs</label>
+            <span class="ls-stats" id="lsStats"></span>
+        </div>
+        <div class="ls-wrap" id="lsWrap">
+            <svg id="lsSvg"></svg>
+            <div class="ls-legend" id="lsLegend"></div>
+            <div class="ls-detail-panel" id="lsDetailPanel">
+                <button class="detail-close" onclick="closeLsDetail()">&times;</button>
+                <div id="lsDetailContent"></div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
 const API = '/api';
 // ── Graph constants ──
@@ -166,50 +231,82 @@ async function loadPipelines() {
     const list = document.getElementById('pipelineList');
     try {
         const res = await fetch(`${API}/pipelines`);
-        const items = await res.json();
-        if (!items.length) { list.innerHTML = '<div class="placeholder">No pipelines</div>'; return; }
+        const tree = await res.json();
+        if (!tree.length) { list.innerHTML = '<div class="placeholder">No pipelines</div>'; return; }
         list.innerHTML = '';
-        items.forEach(name => {
-            const el = document.createElement('div');
-            el.className = 'pipeline-item';
-            const ext = name.split('.').pop();
-            el.innerHTML = `<span class="ext ext-${ext}">${ext.toUpperCase()}</span>${esc(name)}`;
-            el.addEventListener('click', () => selectPipeline(name, el));
-            list.appendChild(el);
-        });
+        renderTree(tree, list, 0);
     } catch { list.innerHTML = '<div class="placeholder error-msg">Failed to load</div>'; }
 }
 
-async function selectPipeline(name, el) {
+function renderTree(nodes, container, depth) {
+    nodes.forEach(node => {
+        if (node.type === 'folder') {
+            const folder = document.createElement('div');
+            folder.className = 'folder';
+            const fileCount = countFiles(node);
+            const header = document.createElement('div');
+            header.className = 'folder-header';
+            header.style.paddingLeft = (depth * 0.7 + 0.3) + 'rem';
+            header.innerHTML = `<span class="folder-arrow open">&#9654;</span><span class="folder-icon">&#128194;</span>${esc(node.name)}<span class="folder-count">${fileCount}</span>`;
+            const children = document.createElement('div');
+            children.className = 'folder-children';
+            header.addEventListener('click', () => {
+                children.classList.toggle('collapsed');
+                header.querySelector('.folder-arrow').classList.toggle('open');
+            });
+            folder.appendChild(header);
+            renderTree(node.children, children, depth + 1);
+            folder.appendChild(children);
+            container.appendChild(folder);
+        } else {
+            const el = document.createElement('div');
+            el.className = 'pipeline-item';
+            el.style.paddingLeft = (depth * 0.7 + 0.5) + 'rem';
+            el.innerHTML = `<span class="ext ext-${node.ext}">${node.ext.toUpperCase()}</span>${esc(node.name)}`;
+            el.title = node.path;
+            el.dataset.filePath = node.path;
+            el.addEventListener('click', () => selectPipeline(node.path, el));
+            container.appendChild(el);
+        }
+    });
+}
+
+function countFiles(node) {
+    if (node.type === 'file') return 1;
+    return (node.children || []).reduce((s, c) => s + countFiles(c), 0);
+}
+
+async function selectPipeline(filePath, el) {
     document.querySelectorAll('.pipeline-item').forEach(e => e.classList.remove('active'));
     el.classList.add('active');
-    currentName = name;
+    currentName = filePath;
+    const displayName = filePath.split('/').pop();
     const header = document.getElementById('mainHeader');
     const body = document.getElementById('mainBody');
     const tabBar = document.getElementById('tabBar');
-    header.innerHTML = `<strong>${esc(name)}</strong>`;
+    header.innerHTML = `<strong>${esc(displayName)}</strong> <span style="color:#555;font-size:0.72rem">${esc(filePath)}</span>`;
     body.innerHTML = '<div class="placeholder loading" style="flex:1">Loading...</div>';
     tabBar.style.display = 'none';
 
-    const ext = name.split('.').pop();
+    const encodedPath = filePath.split('/').map(encodeURIComponent).join('/');
+    const ext = filePath.split('.').pop();
     try {
         if (ext === 'slt') {
-            const res = await fetch(`${API}/pipelines/${encodeURIComponent(name)}/parsed`);
+            const res = await fetch(`${API}/pipelines/${encodedPath}/parsed`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             renderTask(data, header, body);
         } else {
-            // Load both parsed and simplified in parallel
             const [parsedRes, simplifiedRes] = await Promise.all([
-                fetch(`${API}/pipelines/${encodeURIComponent(name)}/parsed`),
-                fetch(`${API}/pipelines/${encodeURIComponent(name)}/simplified`)
+                fetch(`${API}/pipelines/${encodedPath}/parsed`),
+                fetch(`${API}/pipelines/${encodedPath}/simplified`)
             ]);
             if (!parsedRes.ok || !simplifiedRes.ok) throw new Error('Failed to load pipeline');
             currentParsed = await parsedRes.json();
             currentSimplified = await simplifiedRes.json();
             const meta = currentParsed.metadata || {};
-            let hdr = `<strong>${esc(name)}</strong>`;
-            if (meta.notes) hdr += ` <span class="pipeline-notes">${esc(meta.notes)}</span>`;
+            let hdr = `<strong>${esc(displayName)}</strong> <span style="color:#555;font-size:0.72rem">${esc(filePath)}</span>`;
+            if (meta.notes) hdr += `<br><span class="pipeline-notes">${esc(meta.notes)}</span>`;
             header.innerHTML = hdr;
             tabBar.style.display = 'flex';
             showTab('graph');
@@ -553,6 +650,245 @@ function esc(t) { const d = document.createElement('div'); d.textContent = t; re
 function truncate(s, max) { return s && s.length > max ? s.substring(0, max-1) + '…' : (s||''); }
 function row(label, value) { return `<div class="detail-row"><div class="detail-label">${label}</div><div class="detail-value">${value}</div></div>`; }
 function svgNS(tag, attrs) { const el = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,v); return el; }
+
+// ════════════════════════════════ Global View Tabs ════════════════════════════════
+document.querySelectorAll('.global-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.global-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const view = btn.dataset.view;
+        document.getElementById('pipelinesView').style.display = view === 'pipelines' ? 'flex' : 'none';
+        const lsView = document.getElementById('landscapeView');
+        lsView.className = view === 'landscape' ? 'active' : '';
+        if (view === 'landscape' && !landscapeData) loadLandscape();
+    });
+});
+
+// ════════════════════════════════ Landscape ════════════════════════════════
+let landscapeData = null;
+const PROJECT_COLORS = [
+    '#5b9aff','#4caf50','#ff9800','#e91e63','#c77dff','#00bcd4',
+    '#cddc39','#26a69a','#f44336','#ffeb3b','#79c0ff','#d2a8ff',
+];
+
+async function loadLandscape() {
+    const wrap = document.getElementById('lsWrap');
+    const oldLoading = document.getElementById('lsLoading');
+    if (oldLoading) oldLoading.remove();
+    wrap.insertAdjacentHTML('afterbegin', '<div class="placeholder loading" id="lsLoading" style="position:absolute;inset:0;z-index:5">Loading landscape…</div>');
+    try {
+        const res = await fetch(`${API}/landscape`);
+        landscapeData = await res.json();
+        populateLsFilter();
+        renderLandscape();
+    } catch(e) {
+        wrap.innerHTML = `<div class="placeholder error-msg">Failed to load landscape: ${esc(e.message)}</div>`;
+    } finally {
+        document.getElementById('lsLoading')?.remove();
+    }
+}
+
+function populateLsFilter() {
+    const sel = document.getElementById('lsProjectFilter');
+    sel.innerHTML = '<option value="__all__">All projects</option>';
+    (landscapeData.projects || []).forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = `${p.path} (${p.pipelineCount})`;
+        sel.appendChild(opt);
+    });
+}
+
+document.getElementById('lsProjectFilter').addEventListener('change', renderLandscape);
+document.getElementById('lsShowTasks').addEventListener('change', renderLandscape);
+document.getElementById('lsShowExternal').addEventListener('change', renderLandscape);
+
+function renderLandscape() {
+    if (!landscapeData) return;
+
+    const projectFilter = document.getElementById('lsProjectFilter').value;
+    const showTasks = document.getElementById('lsShowTasks').checked;
+    const showExternal = document.getElementById('lsShowExternal').checked;
+
+    // Filter nodes
+    let nodes = landscapeData.nodes.filter(n => {
+        if (!showTasks && n.type === 'task') return false;
+        if (!showExternal && n.type === 'external') return false;
+        if (projectFilter !== '__all__' && n.project !== projectFilter) {
+            // Also include targets of edges from filtered project
+            const isTarget = landscapeData.edges.some(e => {
+                const src = landscapeData.nodes.find(nn => nn.id === e.source);
+                return src && src.project === projectFilter && e.target === n.id;
+            });
+            if (!isTarget) return false;
+        }
+        return true;
+    });
+
+    const nodeIds = new Set(nodes.map(n => n.id));
+    let edges = landscapeData.edges.filter(e => nodeIds.has(e.source) && nodeIds.has(e.target));
+
+    // Project color map
+    const projectList = [...new Set(nodes.map(n => n.project))].sort();
+    const projectColor = {};
+    projectList.forEach((p, i) => { projectColor[p] = PROJECT_COLORS[i % PROJECT_COLORS.length]; });
+
+    // Stats
+    document.getElementById('lsStats').textContent = `${nodes.length} nodes · ${edges.length} edges · ${projectList.length} projects`;
+
+    // Legend
+    const legend = document.getElementById('lsLegend');
+    legend.innerHTML = '<div class="ls-legend-title">Projects</div>' +
+        projectList.map(p => `<div class="ls-legend-row"><div class="ls-legend-dot" style="background:${projectColor[p]}"></div>${p}</div>`).join('') +
+        '<div class="ls-legend-title" style="margin-top:6px">Types</div>' +
+        '<div class="ls-legend-row"><div class="ls-legend-dot" style="background:#5b9aff"></div>Pipeline (.slp)</div>' +
+        '<div class="ls-legend-row"><div class="ls-legend-dot" style="background:#c77dff;border-radius:2px"></div>Task (.slt)</div>' +
+        '<div class="ls-legend-row"><div class="ls-legend-dot" style="border:1px dashed #888;background:transparent"></div>External ref</div>';
+
+    // SVG setup with D3
+    const svg = d3.select('#lsSvg');
+    svg.selectAll('*').remove();
+    const wrap = document.getElementById('lsWrap');
+    const W = wrap.clientWidth;
+    const H = wrap.clientHeight;
+    svg.attr('viewBox', `0 0 ${W} ${H}`);
+
+    // Arrow marker
+    const defs = svg.append('defs');
+    defs.append('marker').attr('id','ls-arrow').attr('viewBox','0 0 10 7')
+        .attr('refX',20).attr('refY',3.5).attr('markerWidth',7).attr('markerHeight',5)
+        .attr('orient','auto')
+        .append('path').attr('d','M0,0 L10,3.5 L0,7 Z').attr('fill','#555');
+
+    const g = svg.append('g');
+    const zoomBehavior = d3.zoom().scaleExtent([0.05, 5]).on('zoom', e => g.attr('transform', e.transform));
+    svg.call(zoomBehavior);
+
+    // Simulation nodes/edges (clone to avoid mutating source)
+    const simNodes = nodes.map(n => ({...n}));
+    const simEdges = edges.map(e => ({source: e.source, target: e.target, label: e.label, rawRef: e.rawRef, params: e.params}));
+
+    const simulation = d3.forceSimulation(simNodes)
+        .force('link', d3.forceLink(simEdges).id(d => d.id).distance(120).strength(0.6))
+        .force('charge', d3.forceManyBody().strength(-350))
+        .force('center', d3.forceCenter(W / 2, H / 2))
+        .force('collision', d3.forceCollide().radius(40))
+        .force('x', d3.forceX(W / 2).strength(0.03))
+        .force('y', d3.forceY(H / 2).strength(0.03));
+
+    // Draw edges
+    const link = g.selectAll('.ls-edge').data(simEdges).enter().append('line')
+        .attr('class', d => {
+            const src = simNodes.find(n => n.id === (typeof d.source === 'object' ? d.source.id : d.source));
+            return 'ls-edge' + (src?.type === 'task' ? ' task-edge' : '');
+        })
+        .attr('stroke', d => {
+            const src = simNodes.find(n => n.id === (typeof d.source === 'object' ? d.source.id : d.source));
+            return projectColor[src?.project] || '#555';
+        })
+        .attr('stroke-width', 1.5)
+        .attr('marker-end', 'url(#ls-arrow)')
+        .on('click', (ev, d) => showLsEdgeDetail(d));
+
+    // Draw nodes
+    const node = g.selectAll('.ls-node').data(simNodes).enter().append('g')
+        .attr('class', 'ls-node')
+        .call(d3.drag()
+            .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+            .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+            .on('end', (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+        )
+        .on('click', (ev, d) => showLsNodeDetail(d, simEdges));
+
+    node.each(function(d) {
+        const el = d3.select(this);
+        const color = projectColor[d.project] || '#888';
+        if (d.type === 'task') {
+            el.append('rect').attr('x', -8).attr('y', -8).attr('width', 16).attr('height', 16)
+                .attr('rx', 3).attr('fill', color + '44').attr('stroke', color).attr('stroke-width', 2);
+        } else if (d.type === 'external') {
+            el.append('circle').attr('r', 8)
+                .attr('fill', 'transparent').attr('stroke', '#888')
+                .attr('stroke-dasharray', '3,2').attr('stroke-width', 1.5);
+        } else {
+            el.append('circle').attr('r', 10)
+                .attr('fill', color + '44').attr('stroke', color).attr('stroke-width', 2);
+        }
+    });
+
+    node.append('text')
+        .attr('dy', -14).attr('text-anchor', 'middle')
+        .text(d => truncate(d.name, 35));
+
+    // Tick
+    simulation.on('tick', () => {
+        link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+        node.attr('transform', d => `translate(${d.x},${d.y})`);
+    });
+}
+
+function showLsNodeDetail(d, allEdges) {
+    const panel = document.getElementById('lsDetailPanel');
+    panel.classList.add('open');
+    const outEdges = allEdges.filter(e => (typeof e.source === 'object' ? e.source.id : e.source) === d.id);
+    const inEdges = allEdges.filter(e => (typeof e.target === 'object' ? e.target.id : e.target) === d.id);
+
+    let h = `<h3>${esc(d.name)}</h3>`;
+    h += row('Type', `<span class="badge" style="background:#222;color:${d.type==='task'?'#c77dff':d.type==='external'?'#888':'#5b9aff'}">${d.type}</span>`);
+    h += row('Project', esc(d.project));
+    if (d.filePath) h += row('File', `<code>${esc(d.filePath)}</code>`);
+
+    if (outEdges.length) {
+        h += `<div class="detail-row"><div class="detail-label">Calls (${outEdges.length})</div><div class="detail-value">`;
+        outEdges.forEach(e => {
+            const tgt = typeof e.target === 'object' ? e.target : {name: e.target};
+            h += `<div style="margin-bottom:4px">→ <strong>${esc(tgt.name||tgt.id||'')}</strong>`;
+            if (e.rawRef) h += ` <span style="color:#555;font-size:0.7rem">(${esc(e.rawRef)})</span>`;
+            if (e.params?.length) {
+                h += `<div style="margin-left:1rem;color:#888;font-size:0.7rem">${e.params.map(p=>esc(p.name)).join(', ')}</div>`;
+            }
+            h += `</div>`;
+        });
+        h += `</div></div>`;
+    }
+
+    if (inEdges.length) {
+        h += `<div class="detail-row"><div class="detail-label">Called by (${inEdges.length})</div><div class="detail-value">`;
+        inEdges.forEach(e => {
+            const src = typeof e.source === 'object' ? e.source : {name: e.source};
+            h += `<div>← <strong>${esc(src.name||src.id||'')}</strong></div>`;
+        });
+        h += `</div></div>`;
+    }
+
+    document.getElementById('lsDetailContent').innerHTML = h;
+}
+
+function showLsEdgeDetail(d) {
+    const panel = document.getElementById('lsDetailPanel');
+    panel.classList.add('open');
+    const src = typeof d.source === 'object' ? d.source : {name: d.source};
+    const tgt = typeof d.target === 'object' ? d.target : {name: d.target};
+
+    let h = `<h3>Connection</h3>`;
+    h += row('From', `<strong>${esc(src.name||'')}</strong>`);
+    h += row('To', `<strong>${esc(tgt.name||'')}</strong>`);
+    if (d.label) h += row('Snap Label', esc(d.label));
+    if (d.rawRef) h += row('Reference', `<code>${esc(d.rawRef)}</code>`);
+
+    if (d.params?.length) {
+        h += `<div class="detail-row"><div class="detail-label">Parameters</div><table class="mapping-table"><tr><th>Name</th><th>Value</th></tr>`;
+        d.params.forEach(p => { h += `<tr><td><code>${esc(p.name||'')}</code></td><td><code>${esc(String(p.value??''))}</code></td></tr>`; });
+        h += `</table></div>`;
+    }
+
+    document.getElementById('lsDetailContent').innerHTML = h;
+}
+
+function closeLsDetail() {
+    document.getElementById('lsDetailPanel').classList.remove('open');
+}
 
 loadPipelines();
 </script>
