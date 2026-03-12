@@ -6,118 +6,63 @@
     <title>Master of Puppets</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #0f1117;
-            color: #e0e0e0;
-            min-height: 100vh;
-        }
-        header {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 1rem 2rem;
-            border-bottom: 2px solid #0f3460;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e0e0e0; min-height: 100vh; }
+        header { background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 0.9rem 2rem; border-bottom: 2px solid #0f3460; display: flex; align-items: center; gap: 1rem; }
         header h1 { font-size: 1.3rem; color: #e94560; font-weight: 700; }
         header span { color: #888; font-size: 0.85rem; }
-        .container { display: flex; height: calc(100vh - 54px); }
+        .container { display: flex; height: calc(100vh - 50px); }
 
         /* ── Sidebar ── */
-        .sidebar {
-            width: 280px; min-width: 220px; background: #13151b;
-            border-right: 1px solid #222; display: flex; flex-direction: column;
-        }
-        .sidebar h2 {
-            padding: 0.8rem 1rem; font-size: 0.8rem; text-transform: uppercase;
-            letter-spacing: 0.05em; color: #888; border-bottom: 1px solid #222;
-        }
-        .pipeline-list { flex: 1; overflow-y: auto; padding: 0.4rem; }
-        .pipeline-item {
-            padding: 0.45rem 0.6rem; margin-bottom: 1px; border-radius: 5px;
-            cursor: pointer; font-size: 0.78rem; font-family: 'Cascadia Code', 'Fira Code', monospace;
-            transition: background 0.15s; word-break: break-all;
-        }
+        .sidebar { width: 270px; min-width: 200px; background: #13151b; border-right: 1px solid #222; display: flex; flex-direction: column; }
+        .sidebar h2 { padding: 0.7rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #888; border-bottom: 1px solid #222; }
+        .pipeline-list { flex: 1; overflow-y: auto; padding: 0.3rem; }
+        .pipeline-item { padding: 0.4rem 0.6rem; margin-bottom: 1px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-family: 'Cascadia Code','Fira Code',monospace; transition: background .15s; word-break: break-all; }
         .pipeline-item:hover { background: #1e2030; }
         .pipeline-item.active { background: #1a2744; color: #5b9aff; font-weight: 600; }
-        .ext {
-            display: inline-block; font-size: 0.65rem; padding: 1px 4px;
-            border-radius: 3px; margin-right: 5px; font-weight: 700;
-        }
+        .ext { display: inline-block; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; margin-right: 4px; font-weight: 700; }
         .ext-slp { background: #0f3460; color: #5b9aff; }
         .ext-slt { background: #2d1a45; color: #c77dff; }
 
         /* ── Main area ── */
         .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .main-header {
-            padding: 0.6rem 1.2rem; border-bottom: 1px solid #222;
-            font-size: 0.85rem; color: #aaa; display: flex; align-items: center; gap: 1rem;
-            flex-shrink: 0;
-        }
+        .main-header { padding: 0.5rem 1.2rem; border-bottom: 1px solid #222; font-size: 0.85rem; color: #aaa; display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
         .main-header strong { color: #e0e0e0; }
-        .pipeline-notes { color: #888; font-size: 0.8rem; font-style: italic; }
-        .main-body { flex: 1; display: flex; overflow: hidden; }
+        .pipeline-notes { color: #666; font-size: 0.78rem; font-style: italic; }
+
+        /* ── Tabs ── */
+        .tab-bar { display: flex; border-bottom: 1px solid #222; flex-shrink: 0; background: #13151b; }
+        .tab-btn { padding: 0.5rem 1.2rem; cursor: pointer; background: transparent; border: none; color: #888; font-size: 0.82rem; border-bottom: 2px solid transparent; transition: all .15s; }
+        .tab-btn:hover { color: #ccc; background: #1a1d26; }
+        .tab-btn.active { color: #5b9aff; border-bottom-color: #5b9aff; }
+        .tab-btn.active-dev { color: #4caf50; border-bottom-color: #4caf50; }
+
+        .main-body { flex: 1; display: flex; overflow: hidden; position: relative; }
+        .tab-content { display: none; flex: 1; overflow: hidden; }
+        .tab-content.active { display: flex; }
 
         /* ── Graph canvas ── */
-        .graph-area {
-            flex: 1; overflow: hidden; position: relative; background: #0d0f14;
-            cursor: grab;
-        }
+        .graph-area { flex: 1; overflow: hidden; position: relative; background: #0d0f14; cursor: grab; }
         .graph-area.grabbing { cursor: grabbing; }
         .graph-area svg { width: 100%; height: 100%; }
 
         /* ── Detail panel ── */
-        .detail-panel {
-            width: 380px; max-width: 40vw; background: #13151b;
-            border-left: 1px solid #222; overflow-y: auto; padding: 1rem;
-            display: none; flex-direction: column; gap: 0.8rem;
-        }
+        .detail-panel { width: 360px; max-width: 38vw; background: #13151b; border-left: 1px solid #222; overflow-y: auto; padding: 1rem; display: none; flex-direction: column; gap: 0.7rem; flex-shrink: 0; }
         .detail-panel.open { display: flex; }
-        .detail-panel h3 {
-            font-size: 1rem; color: #5b9aff; border-bottom: 1px solid #222;
-            padding-bottom: 0.4rem;
-        }
-        .detail-close {
-            float: right; cursor: pointer; color: #888; font-size: 1.1rem;
-            background: none; border: none; padding: 2px 6px;
-        }
+        .detail-panel h3 { font-size: 0.95rem; color: #5b9aff; border-bottom: 1px solid #222; padding-bottom: 0.4rem; }
+        .detail-close { float: right; cursor: pointer; color: #888; font-size: 1.1rem; background: none; border: none; padding: 2px 6px; }
         .detail-close:hover { color: #e94560; }
-        .detail-row { margin-bottom: 0.6rem; }
-        .detail-label {
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
-            color: #666; margin-bottom: 2px;
-        }
-        .detail-value {
-            font-size: 0.82rem; color: #ccc; line-height: 1.5;
-        }
-        .detail-value code {
-            background: #1a1d26; padding: 1px 4px; border-radius: 3px;
-            font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.78rem;
-        }
-        .detail-value pre {
-            background: #1a1d26; padding: 0.5rem; border-radius: 5px;
-            font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.75rem;
-            overflow-x: auto; white-space: pre-wrap; line-height: 1.5; color: #bbb;
-        }
-        .mapping-table {
-            width: 100%; border-collapse: collapse; font-size: 0.75rem;
-        }
-        .mapping-table th {
-            text-align: left; padding: 4px 6px; color: #888; border-bottom: 1px solid #333;
-            font-weight: 600;
-        }
-        .mapping-table td {
-            padding: 3px 6px; border-bottom: 1px solid #1e2030; color: #aaa;
-            word-break: break-all;
-        }
-        .mapping-table td code { background: #1a1d26; padding: 1px 3px; border-radius: 2px; font-size: 0.72rem; }
-        .badge {
-            display: inline-block; font-size: 0.65rem; padding: 2px 6px;
-            border-radius: 3px; font-weight: 700; margin-right: 4px;
-        }
+        .detail-row { margin-bottom: 0.5rem; }
+        .detail-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: #555; margin-bottom: 2px; }
+        .detail-value { font-size: 0.8rem; color: #ccc; line-height: 1.5; }
+        .detail-value code { background: #1a1d26; padding: 1px 4px; border-radius: 3px; font-family: 'Cascadia Code','Fira Code',monospace; font-size: 0.75rem; }
+        .detail-value pre { background: #1a1d26; padding: 0.5rem; border-radius: 5px; font-family: 'Cascadia Code','Fira Code',monospace; font-size: 0.72rem; overflow-x: auto; white-space: pre-wrap; line-height: 1.5; color: #bbb; }
+        .mapping-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+        .mapping-table th { text-align: left; padding: 3px 5px; color: #888; border-bottom: 1px solid #333; font-weight: 600; }
+        .mapping-table td { padding: 2px 5px; border-bottom: 1px solid #1e2030; color: #aaa; word-break: break-all; }
+        .mapping-table td code { background: #1a1d26; padding: 1px 3px; border-radius: 2px; font-size: 0.7rem; }
+        .badge { display: inline-block; font-size: 0.62rem; padding: 2px 6px; border-radius: 3px; font-weight: 700; margin-right: 4px; }
 
-        /* ── Node / edge colours ── */
+        /* ── Node / edge styling ── */
         .node-box { rx: 8; ry: 8; stroke-width: 2; }
         .cat-Transform { fill: #162040; stroke: #3b6fcf; }
         .cat-Flow { fill: #1a2e1a; stroke: #4caf50; }
@@ -128,50 +73,62 @@
         .cat-Cloud { fill: #152d2a; stroke: #26a69a; }
         .cat-Script { fill: #2d2515; stroke: #cddc39; }
         .cat-Unknown { fill: #1e1e1e; stroke: #666; }
-
         .node-group { cursor: pointer; }
         .node-group:hover .node-box { filter: brightness(1.3); }
         .node-group.selected .node-box { stroke-width: 3; filter: brightness(1.4); }
-
         .edge-normal { stroke: #3a4060; stroke-width: 2; fill: none; marker-end: url(#arrow); }
         .edge-error { stroke: #c0392b; stroke-width: 2; fill: none; stroke-dasharray: 6,3; marker-end: url(#arrow-error); }
+        .node-label { fill: #ddd; font-size: 11px; font-family: 'Segoe UI',system-ui,sans-serif; pointer-events: none; }
+        .node-type-label { fill: #777; font-size: 9px; font-family: 'Segoe UI',system-ui,sans-serif; pointer-events: none; }
 
-        .node-label {
-            fill: #ddd; font-size: 11px; font-family: 'Segoe UI', system-ui, sans-serif;
-            pointer-events: none;
-        }
-        .node-type-label {
-            fill: #777; font-size: 9px; font-family: 'Segoe UI', system-ui, sans-serif;
-            pointer-events: none;
-        }
+        /* ── Zoom controls ── */
+        .zoom-controls { position: absolute; bottom: 12px; right: 12px; display: flex; gap: 4px; z-index: 10; }
+        .zoom-btn { width: 30px; height: 30px; border: 1px solid #333; background: #1a1d26; color: #aaa; border-radius: 6px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .zoom-btn:hover { background: #252830; color: #fff; }
+
+        /* ── Developer View ── */
+        .dev-view { flex: 1; display: flex; overflow: hidden; }
+        .dev-steps { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+        .dev-sidebar { width: 360px; max-width: 38vw; background: #13151b; border-left: 1px solid #222; overflow-y: auto; padding: 1rem; display: none; flex-direction: column; gap: 0.7rem; flex-shrink: 0; }
+        .dev-sidebar.open { display: flex; }
+
+        .dev-stats { display: flex; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .stat-card { background: #161820; border: 1px solid #222; border-radius: 8px; padding: 0.6rem 1rem; min-width: 100px; }
+        .stat-num { font-size: 1.4rem; font-weight: 700; color: #5b9aff; }
+        .stat-label { font-size: 0.68rem; color: #666; text-transform: uppercase; letter-spacing: 0.04em; }
+
+        .dev-section { margin-bottom: 1.5rem; }
+        .dev-section h3 { font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.6rem; border-bottom: 1px solid #1e2030; padding-bottom: 0.3rem; }
+
+        .step-card { background: #161820; border: 1px solid #222; border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 0.6rem; cursor: pointer; transition: all .15s; display: flex; gap: 1rem; align-items: flex-start; }
+        .step-card:hover { border-color: #3a4060; background: #1a1d26; }
+        .step-card.selected { border-color: #4caf50; background: #1a2e1a; }
+        .step-num { width: 32px; height: 32px; border-radius: 50%; background: #1a2744; color: #5b9aff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+        .step-icon { font-size: 1.1rem; margin-right: 2px; }
+        .step-body { flex: 1; min-width: 0; }
+        .step-title { font-size: 0.88rem; font-weight: 600; color: #ddd; margin-bottom: 3px; }
+        .step-summary { font-size: 0.78rem; color: #888; line-height: 1.4; }
+        .step-snap-badge { font-size: 0.62rem; padding: 1px 5px; border-radius: 3px; background: #222; color: #666; margin-top: 4px; display: inline-block; }
+        .step-connector { width: 2px; height: 12px; background: #333; margin: 0 0 0 15px; }
+
+        .info-box { background: #161820; border: 1px solid #222; border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.78rem; color: #999; line-height: 1.5; }
+        .info-box strong { color: #ccc; }
+        .info-box ul { margin: 0.3rem 0 0.3rem 1.2rem; }
+        .info-box li { margin-bottom: 0.2rem; }
 
         /* ── Task view ── */
         .task-view { padding: 2rem; overflow-y: auto; flex: 1; }
-        .task-card {
-            background: #161820; border: 1px solid #222; border-radius: 10px;
-            padding: 1.5rem; max-width: 600px;
-        }
+        .task-card { background: #161820; border: 1px solid #222; border-radius: 10px; padding: 1.5rem; max-width: 600px; }
         .task-card h3 { color: #c77dff; margin-bottom: 1rem; }
 
         /* ── Placeholder ── */
-        .placeholder {
-            display: flex; align-items: center; justify-content: center;
-            height: 100%; color: #444; font-size: 1rem;
-        }
+        .placeholder { display: flex; align-items: center; justify-content: center; height: 100%; color: #444; font-size: 1rem; }
         .loading { color: #5b9aff; }
         .error-msg { color: #e94560; }
 
-        /* ── Zoom controls ── */
-        .zoom-controls {
-            position: absolute; bottom: 12px; right: 12px;
-            display: flex; gap: 4px; z-index: 10;
-        }
-        .zoom-btn {
-            width: 32px; height: 32px; border: 1px solid #333; background: #1a1d26;
-            color: #aaa; border-radius: 6px; cursor: pointer; font-size: 1.1rem;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .zoom-btn:hover { background: #252830; color: #fff; }
+        /* ── Dev detail panel ── */
+        .dev-detail h3 { color: #4caf50; }
+        .pseudo-block { background: #0d1117; border: 1px solid #1e2030; border-radius: 6px; padding: 0.8rem; font-family: 'Cascadia Code','Fira Code',monospace; font-size: 0.76rem; color: #8cc265; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; }
     </style>
 </head>
 <body>
@@ -182,12 +139,14 @@
     <div class="container">
         <aside class="sidebar">
             <h2>Pipelines &amp; Tasks</h2>
-            <div class="pipeline-list" id="pipelineList">
-                <div class="placeholder">Loading...</div>
-            </div>
+            <div class="pipeline-list" id="pipelineList"><div class="placeholder">Loading...</div></div>
         </aside>
         <div class="main-area">
             <div class="main-header" id="mainHeader">Select a pipeline from the list</div>
+            <div class="tab-bar" id="tabBar" style="display:none">
+                <button class="tab-btn active" data-tab="graph" id="tabGraph">Pipeline Graph</button>
+                <button class="tab-btn" data-tab="dev" id="tabDev">Developer View</button>
+            </div>
             <div class="main-body" id="mainBody">
                 <div class="placeholder" style="flex:1">&#8592; Choose a pipeline to explore</div>
             </div>
@@ -196,8 +155,13 @@
 
 <script>
 const API = '/api';
+// ── Graph constants ──
+const NODE_W = 180, NODE_H = 56, GRID_X = 220, GRID_Y = 110, PAD = 80;
+let currentParsed = null, currentSimplified = null, currentName = '';
+let panState = null, svgEl = null, gWorld = null;
+let transform = { x: 0, y: 0, k: 1 };
 
-// ────────────────────── Sidebar ──────────────────────
+// ════════════════════════════════ Sidebar ════════════════════════════════
 async function loadPipelines() {
     const list = document.getElementById('pipelineList');
     try {
@@ -219,184 +183,167 @@ async function loadPipelines() {
 async function selectPipeline(name, el) {
     document.querySelectorAll('.pipeline-item').forEach(e => e.classList.remove('active'));
     el.classList.add('active');
+    currentName = name;
     const header = document.getElementById('mainHeader');
     const body = document.getElementById('mainBody');
+    const tabBar = document.getElementById('tabBar');
     header.innerHTML = `<strong>${esc(name)}</strong>`;
     body.innerHTML = '<div class="placeholder loading" style="flex:1">Loading...</div>';
+    tabBar.style.display = 'none';
+
+    const ext = name.split('.').pop();
     try {
-        const res = await fetch(`${API}/pipelines/${encodeURIComponent(name)}/parsed`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (data.type === 'task') renderTask(data, header, body);
-        else renderPipeline(data, header, body);
+        if (ext === 'slt') {
+            const res = await fetch(`${API}/pipelines/${encodeURIComponent(name)}/parsed`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            renderTask(data, header, body);
+        } else {
+            // Load both parsed and simplified in parallel
+            const [parsedRes, simplifiedRes] = await Promise.all([
+                fetch(`${API}/pipelines/${encodeURIComponent(name)}/parsed`),
+                fetch(`${API}/pipelines/${encodeURIComponent(name)}/simplified`)
+            ]);
+            if (!parsedRes.ok || !simplifiedRes.ok) throw new Error('Failed to load pipeline');
+            currentParsed = await parsedRes.json();
+            currentSimplified = await simplifiedRes.json();
+            const meta = currentParsed.metadata || {};
+            let hdr = `<strong>${esc(name)}</strong>`;
+            if (meta.notes) hdr += ` <span class="pipeline-notes">${esc(meta.notes)}</span>`;
+            header.innerHTML = hdr;
+            tabBar.style.display = 'flex';
+            showTab('graph');
+        }
     } catch (e) {
         body.innerHTML = `<div class="placeholder error-msg" style="flex:1">${esc(e.message)}</div>`;
     }
 }
 
-// ────────────────────── Task rendering ──────────────────────
+// ════════════════════════════════ Tab switching ════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+function showTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active', 'active-dev'); });
+    if (tab === 'graph') {
+        document.getElementById('tabGraph').classList.add('active');
+        renderGraphTab();
+    } else {
+        document.getElementById('tabDev').classList.add('active-dev');
+        renderDevTab();
+    }
+}
+
+// ════════════════════════════════ Task rendering ════════════════════════════════
 function renderTask(data, header, body) {
     header.innerHTML = `<strong>${esc(data.jobName || 'Task')}</strong> <span class="badge" style="background:#2d1a45;color:#c77dff">TASK</span>`;
-    const p = data.parameters || {};
-    const s = data.schedule || {};
+    const p = data.parameters || {}, s = data.schedule || {};
     body.innerHTML = `<div class="task-view"><div class="task-card">
         <h3>${esc(data.jobName || '')}</h3>
         <div class="detail-row"><div class="detail-label">Trigger Type</div><div class="detail-value">${esc(data.triggerType || '-')}</div></div>
         <div class="detail-row"><div class="detail-label">Pipeline</div><div class="detail-value"><code>${esc(p.pipeline_path || '-')}</code></div></div>
         <div class="detail-row"><div class="detail-label">Snaplex</div><div class="detail-value"><code>${esc(p.snaplex_path || '-')}</code></div></div>
-        <div class="detail-row"><div class="detail-label">Schedule</div><div class="detail-value">${esc(s.start_date || '')} ${esc(s.start_time || '')} (${esc(s.time_zone || '')})<br>Repeat every ${s.repeat?.every || '?'} ${s.repeat?.by || ''}</div></div>
+        <div class="detail-row"><div class="detail-label">Schedule</div><div class="detail-value">${esc(s.start_date||'')} ${esc(s.start_time||'')} (${esc(s.time_zone||'')})<br>Repeat every ${s.repeat?.every||'?'} ${s.repeat?.by||''}</div></div>
         <div class="detail-row"><div class="detail-label">Enabled</div><div class="detail-value">${p.enabled ? 'Yes' : 'No'}</div></div>
         ${data.note ? `<div class="detail-row"><div class="detail-label">Note</div><div class="detail-value">${esc(data.note)}</div></div>` : ''}
     </div></div>`;
 }
 
-// ────────────────────── Pipeline graph rendering ──────────────────────
-const NODE_W = 180, NODE_H = 56, GRID = 100, PAD = 60;
-let currentData = null, panState = null, svgEl = null, gWorld = null;
-let transform = { x: 0, y: 0, k: 1 };
-
-function renderPipeline(data, header, body) {
-    currentData = data;
-    const meta = data.metadata || {};
-    let hdr = `<strong>${esc(header.querySelector('strong')?.textContent || '')}</strong>`;
-    if (meta.notes) hdr += ` <span class="pipeline-notes">${esc(meta.notes)}</span>`;
-    header.innerHTML = hdr;
-
+// ════════════════════════════════ Graph Tab ════════════════════════════════
+function renderGraphTab() {
+    const body = document.getElementById('mainBody');
     body.innerHTML = `
-        <div class="graph-area" id="graphArea">
-            <svg id="graphSvg">
-                <defs>
-                    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
-                        markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a4060"/>
-                    </marker>
-                    <marker id="arrow-error" viewBox="0 0 10 10" refX="10" refY="5"
-                        markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c0392b"/>
-                    </marker>
-                </defs>
-                <g id="world"></g>
-            </svg>
-            <div class="zoom-controls">
-                <button class="zoom-btn" onclick="zoomBy(1.3)" title="Zoom in">+</button>
-                <button class="zoom-btn" onclick="zoomBy(0.77)" title="Zoom out">&minus;</button>
-                <button class="zoom-btn" onclick="zoomFit()" title="Fit">&#8689;</button>
+        <div class="tab-content active" id="graphTabContent" style="display:flex;flex:1;">
+            <div class="graph-area" id="graphArea">
+                <svg id="graphSvg">
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#3a4060"/></marker>
+                        <marker id="arrow-error" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c0392b"/></marker>
+                    </defs>
+                    <g id="world"></g>
+                </svg>
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomBy(1.3)" title="Zoom in">+</button>
+                    <button class="zoom-btn" onclick="zoomBy(0.77)" title="Zoom out">&minus;</button>
+                    <button class="zoom-btn" onclick="zoomFit()" title="Fit">&#8689;</button>
+                </div>
             </div>
-        </div>
-        <div class="detail-panel" id="detailPanel"></div>`;
-
+            <div class="detail-panel" id="detailPanel"></div>
+        </div>`;
     svgEl = document.getElementById('graphSvg');
     gWorld = document.getElementById('world');
     transform = { x: PAD, y: PAD, k: 1 };
-
-    drawGraph(data);
+    drawGraph(currentParsed);
     setupPanZoom();
     setTimeout(zoomFit, 50);
 }
 
 function drawGraph(data) {
     gWorld.innerHTML = '';
-    const nodeMap = {};
     const nodePositions = {};
-
-    // Compute positions from grid
     data.nodes.forEach(n => {
-        const x = n.gridX * GRID;
-        const y = n.gridY * GRID;
-        nodePositions[n.id] = { x, y };
-        nodeMap[n.id] = n;
+        nodePositions[n.id] = { x: n.gridX * GRID_X, y: n.gridY * GRID_Y };
     });
-
-    // Draw edges first (behind nodes)
+    // Edges
     data.edges.forEach(e => {
-        const src = nodePositions[e.source];
-        const dst = nodePositions[e.target];
+        const src = nodePositions[e.source], dst = nodePositions[e.target];
         if (!src || !dst) return;
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', edgePath(src, dst));
         path.setAttribute('class', e.isError ? 'edge-error' : 'edge-normal');
-        path.dataset.edgeId = e.id;
-        path.dataset.src = e.source;
-        path.dataset.dst = e.target;
+        path.dataset.edgeId = e.id; path.dataset.src = e.source; path.dataset.dst = e.target;
         gWorld.appendChild(path);
     });
-
-    // Draw nodes
+    // Nodes
     data.nodes.forEach(n => {
         const pos = nodePositions[n.id];
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         g.setAttribute('class', 'node-group');
-        g.setAttribute('transform', `translate(${pos.x}, ${pos.y})`);
+        g.setAttribute('transform', `translate(${pos.x},${pos.y})`);
         g.dataset.nodeId = n.id;
-
-        const catClass = 'cat-' + (n.category || 'Unknown');
-        const rect = svgNS('rect', {
-            class: `node-box ${catClass}`, x: -NODE_W/2, y: -NODE_H/2,
-            width: NODE_W, height: NODE_H
-        });
-        g.appendChild(rect);
-
-        // Label (snap name)
+        g.appendChild(svgNS('rect', { class: `node-box cat-${n.category||'Unknown'}`, x: -NODE_W/2, y: -NODE_H/2, width: NODE_W, height: NODE_H }));
         const label = svgNS('text', { class: 'node-label', x: 0, y: -4, 'text-anchor': 'middle' });
         label.textContent = truncate(n.label, 22);
         g.appendChild(label);
-
-        // Type sublabel
-        const typeLabel = svgNS('text', { class: 'node-type-label', x: 0, y: 12, 'text-anchor': 'middle' });
-        typeLabel.textContent = n.type;
-        g.appendChild(typeLabel);
-
-        // Click to show details
-        g.addEventListener('click', (ev) => {
-            ev.stopPropagation();
-            showNodeDetail(n);
-            document.querySelectorAll('.node-group').forEach(ng => ng.classList.remove('selected'));
-            g.classList.add('selected');
-        });
-
-        // Drag
+        const tl = svgNS('text', { class: 'node-type-label', x: 0, y: 12, 'text-anchor': 'middle' });
+        tl.textContent = n.type;
+        g.appendChild(tl);
+        g.addEventListener('click', ev => { ev.stopPropagation(); showNodeDetail(n); document.querySelectorAll('.node-group').forEach(ng => ng.classList.remove('selected')); g.classList.add('selected'); });
         makeDraggable(g, nodePositions, n.id, data.edges);
-
         gWorld.appendChild(g);
     });
 }
 
 function edgePath(src, dst) {
     const sx = src.x, sy = src.y, dx = dst.x, dy = dst.y;
-    const mx = (sx + dx) / 2;
-    // Use cubic bezier
-    if (Math.abs(sy - dy) < 10) {
-        // Mostly horizontal
-        return `M${sx + NODE_W/2},${sy} C${mx},${sy} ${mx},${dy} ${dx - NODE_W/2},${dy}`;
+    const half = NODE_W / 2;
+    if (Math.abs(sy - dy) < 15) {
+        const mx = (sx + dx) / 2;
+        return `M${sx+half},${sy} C${mx},${sy} ${mx},${dy} ${dx-half},${dy}`;
     }
-    return `M${sx + NODE_W/2},${sy} C${sx + NODE_W/2 + 40},${sy} ${dx - NODE_W/2 - 40},${dy} ${dx - NODE_W/2},${dy}`;
+    return `M${sx+half},${sy} C${sx+half+50},${sy} ${dx-half-50},${dy} ${dx-half},${dy}`;
 }
 
-function updateEdges(nodePositions, edges) {
+function updateEdges(positions, edges) {
     edges.forEach(e => {
-        const path = gWorld.querySelector(`[data-edge-id="${e.id}"]`);
-        if (!path) return;
-        const src = nodePositions[e.source];
-        const dst = nodePositions[e.target];
-        if (src && dst) path.setAttribute('d', edgePath(src, dst));
+        const p = gWorld.querySelector(`[data-edge-id="${e.id}"]`);
+        if (!p) return;
+        const s = positions[e.source], d = positions[e.target];
+        if (s && d) p.setAttribute('d', edgePath(s, d));
     });
 }
 
-// ────────────────────── Draggable nodes ──────────────────────
 function makeDraggable(g, positions, nodeId, edges) {
-    let dragging = false, startMouse = null, startPos = null;
-    g.addEventListener('mousedown', (ev) => {
+    let dragging = false, sm = null, sp = null;
+    g.addEventListener('mousedown', ev => {
         if (ev.button !== 0) return;
-        dragging = true;
-        startMouse = { x: ev.clientX, y: ev.clientY };
-        startPos = { ...positions[nodeId] };
+        dragging = true; sm = { x: ev.clientX, y: ev.clientY }; sp = { ...positions[nodeId] };
         ev.stopPropagation();
-        const onMove = (ev2) => {
+        const onMove = e2 => {
             if (!dragging) return;
-            const dx = (ev2.clientX - startMouse.x) / transform.k;
-            const dy = (ev2.clientY - startMouse.y) / transform.k;
-            positions[nodeId] = { x: startPos.x + dx, y: startPos.y + dy };
-            g.setAttribute('transform', `translate(${positions[nodeId].x}, ${positions[nodeId].y})`);
+            positions[nodeId] = { x: sp.x + (e2.clientX - sm.x) / transform.k, y: sp.y + (e2.clientY - sm.y) / transform.k };
+            g.setAttribute('transform', `translate(${positions[nodeId].x},${positions[nodeId].y})`);
             updateEdges(positions, edges);
         };
         const onUp = () => { dragging = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
@@ -405,143 +352,207 @@ function makeDraggable(g, positions, nodeId, edges) {
     });
 }
 
-// ────────────────────── Pan & Zoom ──────────────────────
 function setupPanZoom() {
     const area = document.getElementById('graphArea');
-    // Pan
-    area.addEventListener('mousedown', (ev) => {
+    area.addEventListener('mousedown', ev => {
         if (ev.target.closest('.node-group') || ev.target.closest('.zoom-btn')) return;
         area.classList.add('grabbing');
         const start = { x: ev.clientX, y: ev.clientY, tx: transform.x, ty: transform.y };
-        const onMove = (e2) => {
-            transform.x = start.tx + (e2.clientX - start.x);
-            transform.y = start.ty + (e2.clientY - start.y);
-            applyTransform();
-        };
+        const onMove = e2 => { transform.x = start.tx + e2.clientX - start.x; transform.y = start.ty + e2.clientY - start.y; applyTransform(); };
         const onUp = () => { area.classList.remove('grabbing'); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
         window.addEventListener('mousemove', onMove);
         window.addEventListener('mouseup', onUp);
     });
-    // Zoom with wheel
-    area.addEventListener('wheel', (ev) => {
+    area.addEventListener('wheel', ev => {
         ev.preventDefault();
-        const factor = ev.deltaY < 0 ? 1.12 : 0.89;
-        const rect = svgEl.getBoundingClientRect();
-        const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
-        transform.x = mx - (mx - transform.x) * factor;
-        transform.y = my - (my - transform.y) * factor;
-        transform.k *= factor;
+        const f = ev.deltaY < 0 ? 1.12 : 0.89;
+        const r = svgEl.getBoundingClientRect();
+        const mx = ev.clientX - r.left, my = ev.clientY - r.top;
+        transform.x = mx - (mx - transform.x) * f; transform.y = my - (my - transform.y) * f; transform.k *= f;
         applyTransform();
     }, { passive: false });
-    // Click on background to deselect
-    area.addEventListener('click', (ev) => {
-        if (!ev.target.closest('.node-group')) {
-            document.querySelectorAll('.node-group').forEach(g => g.classList.remove('selected'));
-            document.getElementById('detailPanel').classList.remove('open');
-        }
+    area.addEventListener('click', ev => {
+        if (!ev.target.closest('.node-group')) { document.querySelectorAll('.node-group').forEach(g => g.classList.remove('selected')); document.getElementById('detailPanel').classList.remove('open'); }
     });
 }
 
-function applyTransform() {
-    gWorld.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.k})`);
-}
-function zoomBy(f) {
-    const rect = svgEl.getBoundingClientRect();
-    const cx = rect.width / 2, cy = rect.height / 2;
-    transform.x = cx - (cx - transform.x) * f;
-    transform.y = cy - (cy - transform.y) * f;
-    transform.k *= f;
-    applyTransform();
-}
+function applyTransform() { gWorld.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.k})`); }
+function zoomBy(f) { const r = svgEl.getBoundingClientRect(); const cx = r.width/2, cy = r.height/2; transform.x = cx-(cx-transform.x)*f; transform.y = cy-(cy-transform.y)*f; transform.k *= f; applyTransform(); }
 function zoomFit() {
-    if (!currentData || !currentData.nodes.length) return;
-    const rect = svgEl.getBoundingClientRect();
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    currentData.nodes.forEach(n => {
-        const x = n.gridX * GRID, y = n.gridY * GRID;
-        minX = Math.min(minX, x - NODE_W/2); maxX = Math.max(maxX, x + NODE_W/2);
-        minY = Math.min(minY, y - NODE_H/2); maxY = Math.max(maxY, y + NODE_H/2);
-    });
-    const gW = maxX - minX + PAD*2, gH = maxY - minY + PAD*2;
-    const k = Math.min(rect.width / gW, rect.height / gH, 1.5);
-    transform.k = k;
-    transform.x = (rect.width - gW * k) / 2 - minX * k + PAD * k;
-    transform.y = (rect.height - gH * k) / 2 - minY * k + PAD * k;
+    if (!currentParsed || !currentParsed.nodes.length) return;
+    const r = svgEl.getBoundingClientRect();
+    let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity;
+    currentParsed.nodes.forEach(n => { const x=n.gridX*GRID_X, y=n.gridY*GRID_Y; mnX=Math.min(mnX,x-NODE_W/2); mxX=Math.max(mxX,x+NODE_W/2); mnY=Math.min(mnY,y-NODE_H/2); mxY=Math.max(mxY,y+NODE_H/2); });
+    const gW=mxX-mnX+PAD*2, gH=mxY-mnY+PAD*2;
+    const k = Math.min(r.width/gW, r.height/gH, 1.5);
+    transform.k = k; transform.x = (r.width-gW*k)/2-mnX*k+PAD*k; transform.y = (r.height-gH*k)/2-mnY*k+PAD*k;
     applyTransform();
 }
 
-// ────────────────────── Node detail panel ──────────────────────
+// ── Node detail panel (graph tab) ──
 function showNodeDetail(node) {
     const panel = document.getElementById('detailPanel');
     panel.classList.add('open');
-    const catColors = { Transform:'#3b6fcf', Flow:'#4caf50', Database:'#9c27b0', REST:'#ff9800', Read:'#00bcd4', Write:'#e91e63', Cloud:'#26a69a', Script:'#cddc39' };
-    const color = catColors[node.category] || '#888';
-    let html = `<button class="detail-close" onclick="document.getElementById('detailPanel').classList.remove('open');document.querySelectorAll('.node-group').forEach(g=>g.classList.remove('selected'))">&times;</button>`;
-    html += `<h3 style="color:${color}">${esc(node.label)}</h3>`;
-    html += row('Type', `<span class="badge" style="background:${color}22;color:${color}">${esc(node.category)}</span> ${esc(node.type)}`);
-    html += row('Snap Class', `<code>${esc(node.classId)}</code>`);
-    if (node.notes) html += row('Description', esc(node.notes));
-    html += row('Error Handling', `<code>${esc(node.settings.errorBehavior || 'fail')}</code>`);
-
+    const cc = { Transform:'#3b6fcf', Flow:'#4caf50', Database:'#9c27b0', REST:'#ff9800', Read:'#00bcd4', Write:'#e91e63', Cloud:'#26a69a', Script:'#cddc39' };
+    const color = cc[node.category] || '#888';
+    let h = `<button class="detail-close" onclick="document.getElementById('detailPanel').classList.remove('open');document.querySelectorAll('.node-group').forEach(g=>g.classList.remove('selected'))">&times;</button>`;
+    h += `<h3 style="color:${color}">${esc(node.label)}</h3>`;
+    h += row('Type', `<span class="badge" style="background:${color}22;color:${color}">${esc(node.category)}</span> ${esc(node.type)}`);
+    h += row('Snap Class', `<code>${esc(node.classId)}</code>`);
+    if (node.notes) h += row('Description', esc(node.notes));
+    h += row('Error Handling', `<code>${esc(node.settings.errorBehavior||'fail')}</code>`);
     const s = node.settings;
-    if (s.account) html += row('Account', `<code>${esc(s.account)}</code>`);
-    if (s.pipeline) html += row('Calls Pipeline', `<code>${esc(s.pipeline)}</code>`);
-    if (s.url) html += row('URL', `<code>${esc(s.url)}</code>`);
-    if (s.httpMethod) html += row('HTTP Method', esc(s.httpMethod));
-    if (s.tableName) html += row('DynamoDB Table', `<code>${esc(s.tableName)}</code>`);
-    if (s.keyCondition) html += row('Key Condition', `<code>${esc(s.keyCondition)}</code>`);
-    if (s.content) html += row('Generator Content', `<pre>${esc(s.content)}</pre>`);
-
-    if (s.mappings && s.mappings.length) {
-        html += `<div class="detail-row"><div class="detail-label">Mappings (${s.mappings.length})</div>`;
-        html += `<table class="mapping-table"><tr><th>Expression</th><th>Target</th></tr>`;
-        s.mappings.forEach(m => {
-            html += `<tr><td><code>${esc(m.expression || '')}</code></td><td><code>${esc(m.target || '')}</code></td></tr>`;
-        });
-        html += `</table></div>`;
+    if (s.account) h += row('Account', `<code>${esc(s.account)}</code>`);
+    if (s.pipeline) h += row('Calls Pipeline', `<code>${esc(s.pipeline)}</code>`);
+    if (s.url) h += row('URL', `<code>${esc(s.url)}</code>`);
+    if (s.httpMethod) h += row('HTTP Method', esc(s.httpMethod));
+    if (s.tableName) h += row('DynamoDB Table', `<code>${esc(s.tableName)}</code>`);
+    if (s.keyCondition) h += row('Key Condition', `<code>${esc(s.keyCondition)}</code>`);
+    if (s.content) h += row('Generator Content', `<pre>${esc(s.content)}</pre>`);
+    if (s.mappings?.length) {
+        h += `<div class="detail-row"><div class="detail-label">Mappings (${s.mappings.length})</div><table class="mapping-table"><tr><th>Expression</th><th>Target</th></tr>`;
+        s.mappings.forEach(m => { h += `<tr><td><code>${esc(m.expression||'')}</code></td><td><code>${esc(m.target||'')}</code></td></tr>`; });
+        h += `</table></div>`;
     }
-
-    if (s.conditions && s.conditions.length) {
-        html += `<div class="detail-row"><div class="detail-label">Conditions (${s.conditions.length})</div>`;
-        html += `<table class="mapping-table"><tr><th>If</th><th>Then</th><th>Target</th></tr>`;
-        s.conditions.forEach(c => {
-            html += `<tr><td><code>${esc(c.if || '')}</code></td><td><code>${esc(c.then || '')}</code></td><td><code>${esc(c.target || '')}</code></td></tr>`;
-        });
-        html += `</table></div>`;
+    if (s.conditions?.length) {
+        h += `<div class="detail-row"><div class="detail-label">Conditions (${s.conditions.length})</div><table class="mapping-table"><tr><th>If</th><th>Then</th><th>Target</th></tr>`;
+        s.conditions.forEach(c => { h += `<tr><td><code>${esc(c.if||'')}</code></td><td><code>${esc(c.then||'')}</code></td><td><code>${esc(c.target||'')}</code></td></tr>`; });
+        h += `</table></div>`;
     }
-
-    if (s.constraints && s.constraints.length) {
-        html += `<div class="detail-row"><div class="detail-label">Validation Constraints</div>`;
-        html += `<table class="mapping-table"><tr><th>Path</th><th>Constraint</th><th>Value</th></tr>`;
-        s.constraints.forEach(c => {
-            html += `<tr><td><code>${esc(c.path || '')}</code></td><td>${esc(c.constraint || '')}</td><td>${esc(c.value || '')}</td></tr>`;
-        });
-        html += `</table></div>`;
+    if (s.constraints?.length) {
+        h += `<div class="detail-row"><div class="detail-label">Validation Constraints</div><table class="mapping-table"><tr><th>Path</th><th>Constraint</th><th>Value</th></tr>`;
+        s.constraints.forEach(c => { h += `<tr><td><code>${esc(c.path||'')}</code></td><td>${esc(c.constraint||'')}</td><td>${esc(c.value||'')}</td></tr>`; });
+        h += `</table></div>`;
     }
-
-    if (s.params && s.params.length) {
-        html += `<div class="detail-row"><div class="detail-label">Pipeline Parameters</div>`;
-        html += `<table class="mapping-table"><tr><th>Name</th><th>Value</th></tr>`;
-        s.params.forEach(p => {
-            html += `<tr><td><code>${esc(p.name || '')}</code></td><td><code>${esc(String(p.value ?? ''))}</code></td></tr>`;
-        });
-        html += `</table></div>`;
+    if (s.params?.length) {
+        h += `<div class="detail-row"><div class="detail-label">Pipeline Parameters</div><table class="mapping-table"><tr><th>Name</th><th>Value</th></tr>`;
+        s.params.forEach(p => { h += `<tr><td><code>${esc(p.name||'')}</code></td><td><code>${esc(String(p.value??''))}</code></td></tr>`; });
+        h += `</table></div>`;
     }
-
-    if (s.passThrough !== undefined) html += row('Pass-Through', s.passThrough ? 'Yes' : 'No');
-
-    panel.innerHTML = html;
+    if (s.passThrough !== undefined) h += row('Pass-Through', s.passThrough ? 'Yes' : 'No');
+    panel.innerHTML = h;
 }
 
-// ────────────────────── Helpers ──────────────────────
+// ════════════════════════════════ Developer View Tab ════════════════════════════════
+function renderDevTab() {
+    const body = document.getElementById('mainBody');
+    const d = currentSimplified;
+    if (!d) { body.innerHTML = '<div class="placeholder" style="flex:1">No data</div>'; return; }
+
+    body.innerHTML = `
+        <div class="tab-content active" id="devTabContent" style="display:flex;flex:1;">
+            <div class="dev-view">
+                <div class="dev-steps" id="devSteps"></div>
+            </div>
+            <div class="dev-sidebar dev-detail" id="devDetailPanel"></div>
+        </div>`;
+
+    const container = document.getElementById('devSteps');
+    let html = '';
+
+    // Stats bar
+    const st = d.stats;
+    html += `<div class="dev-stats">
+        <div class="stat-card"><div class="stat-num">${st.totalSnaps}</div><div class="stat-label">Total Snaps</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#4caf50">${d.steps.length}</div><div class="stat-label">Dev Steps</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#e94560">${st.errorHandlingSnaps}</div><div class="stat-label">Error Handlers</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#ff9800">${st.loggingSnaps + st.plumbingSnaps}</div><div class="stat-label">Plumbing</div></div>
+    </div>`;
+
+    // Pipeline parameters
+    if (d.parameters?.length) {
+        html += `<div class="dev-section"><h3>Pipeline Parameters</h3><div class="info-box"><ul>`;
+        d.parameters.forEach(p => { html += `<li><strong>${esc(p.key||'')}</strong> <span style="color:#666">(${esc(p.type||'string')}${p.required?' required':''})</span>${p.description ? ': '+esc(p.description) : ''}</li>`; });
+        html += `</ul></div></div>`;
+    }
+
+    // Steps
+    html += `<div class="dev-section"><h3>Implementation Steps</h3>`;
+    d.steps.forEach((step, i) => {
+        const icon = stepIcon(step.icon);
+        html += `<div class="step-card" data-step-idx="${i}" onclick="showStepDetail(${i})">
+            <div class="step-num">${step.stepNumber}</div>
+            <div class="step-body">
+                <div class="step-title">${icon} ${esc(step.title)}</div>
+                <div class="step-summary">${esc(step.summary)}</div>
+                ${step.snapType ? `<span class="step-snap-badge">${esc(step.snapType)}</span>` : ''}
+                ${step.collapsedSnaps ? `<span class="step-snap-badge" style="background:#1a2744;color:#5b9aff">${step.collapsedSnaps.length} snaps collapsed</span>` : ''}
+            </div>
+        </div>`;
+        if (i < d.steps.length - 1) html += `<div class="step-connector"></div>`;
+    });
+    html += `</div>`;
+
+    // Error handling section
+    const eh = d.errorHandling;
+    if (eh) {
+        html += `<div class="dev-section"><h3>Error Handling Strategy</h3><div class="info-box">
+            <p>${esc(eh.summary)}</p>
+            <ul>${eh.strategies.map(s => `<li><strong>${esc(s.type)}</strong>: ${esc(s.description)}</li>`).join('')}</ul>
+            <p style="margin-top:0.5rem;color:#4caf50"><strong>Recommendation:</strong> ${esc(eh.recommendation)}</p>
+        </div></div>`;
+    }
+
+    // Logging section
+    const lg = d.logging;
+    if (lg) {
+        html += `<div class="dev-section"><h3>Logging &amp; Observability</h3><div class="info-box">
+            <p>${esc(lg.summary)}</p>
+            <ul>
+                <li>Request logging: ${lg.logsRequest ? 'Yes' : 'No'}</li>
+                <li>Response logging: ${lg.logsResponse ? 'Yes' : 'No'}</li>
+            </ul>
+            <p style="margin-top:0.5rem;color:#4caf50"><strong>Recommendation:</strong> ${esc(lg.recommendation)}</p>
+        </div></div>`;
+    }
+
+    container.innerHTML = html;
+}
+
+function showStepDetail(idx) {
+    const step = currentSimplified.steps[idx];
+    if (!step) return;
+    const panel = document.getElementById('devDetailPanel');
+    panel.classList.add('open');
+
+    document.querySelectorAll('.step-card').forEach(c => c.classList.remove('selected'));
+    const card = document.querySelector(`[data-step-idx="${idx}"]`);
+    if (card) card.classList.add('selected');
+
+    let h = `<button class="detail-close" onclick="document.getElementById('devDetailPanel').classList.remove('open');document.querySelectorAll('.step-card').forEach(c=>c.classList.remove('selected'))">&times;</button>`;
+    h += `<h3>${stepIcon(step.icon)} Step ${step.stepNumber}: ${esc(step.title)}</h3>`;
+    h += row('Summary', esc(step.summary));
+
+    if (step.snapType) h += row('Original Snap Type', `<span class="badge" style="background:#222;color:#aaa">${esc(step.snapType)}</span> <span style="color:#666">${esc(step.snapCategory||'')}</span>`);
+    if (step.collapsedSnaps) h += row('Collapsed From', step.collapsedSnaps.map(s => `<code>${esc(s)}</code>`).join(' &rarr; '));
+
+    if (step.details?.length) {
+        h += `<div class="detail-row"><div class="detail-label">Details</div><div class="detail-value"><ul style="margin:0.2rem 0 0 1rem;line-height:1.6">`;
+        step.details.forEach(d => { h += `<li>${esc(d)}</li>`; });
+        h += `</ul></div></div>`;
+    }
+
+    if (step.pseudocode) {
+        h += `<div class="detail-row"><div class="detail-label">Pseudocode (Python)</div><div class="pseudo-block">${esc(step.pseudocode)}</div></div>`;
+    }
+
+    panel.innerHTML = h;
+}
+
+function stepIcon(icon) {
+    const icons = {
+        config: '&#9881;', transform: '&#8644;', flow: '&#8649;', database: '&#128451;',
+        http: '&#127760;', read: '&#128196;', write: '&#128190;', cloud: '&#9729;',
+        script: '&#128221;', subprocess: '&#9654;', step: '&#9632;',
+    };
+    return `<span class="step-icon">${icons[icon] || icons.step}</span>`;
+}
+
+// ════════════════════════════════ Helpers ════════════════════════════════
 function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-function truncate(s, max) { return s && s.length > max ? s.substring(0, max - 1) + '…' : (s || ''); }
+function truncate(s, max) { return s && s.length > max ? s.substring(0, max-1) + '…' : (s||''); }
 function row(label, value) { return `<div class="detail-row"><div class="detail-label">${label}</div><div class="detail-value">${value}</div></div>`; }
-function svgNS(tag, attrs) {
-    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
-    return el;
-}
+function svgNS(tag, attrs) { const el = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,v); return el; }
 
 loadPipelines();
 </script>

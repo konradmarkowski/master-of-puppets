@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from parser import parse_pipeline, parse_task
+from simplifier import simplify_pipeline
 
 app = FastAPI(title="Master of Puppets", version="0.1.0")
 
@@ -15,6 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+DATA_ROOT = Path("/data")
 PIPELINES_DIR = Path("/data/snaplogic-resource/snaplogic-Resource")
 PIPELINE_EXTENSIONS = {".slp", ".slt"}
 
@@ -61,3 +63,17 @@ def get_pipeline_parsed(name: str):
     if file_path.suffix == ".slt":
         return parse_task(data)
     return parse_pipeline(data)
+
+
+@app.get("/api/pipelines/{name}/simplified")
+def get_pipeline_simplified(name: str):
+    """Return a developer-oriented simplified view of a pipeline."""
+    file_path = _safe_path(name)
+    if file_path.suffix == ".slt":
+        raise HTTPException(status_code=400, detail="Simplified view is only available for pipelines (.slp)")
+
+    with open(file_path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    parsed = parse_pipeline(data)
+    return simplify_pipeline(parsed)
