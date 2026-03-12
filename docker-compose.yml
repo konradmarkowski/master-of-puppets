@@ -1,0 +1,14 @@
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ${SNAPLOGIC_SOURCE_PATH:-../master-of-ipaas/source}:/data
+    expose:
+      - "8000"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
