@@ -14,120 +14,170 @@
         }
         header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 1.2rem 2rem;
+            padding: 1rem 2rem;
             border-bottom: 2px solid #0f3460;
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        header h1 {
-            font-size: 1.4rem;
-            color: #e94560;
-            font-weight: 700;
-        }
-        header span {
-            color: #888;
-            font-size: 0.85rem;
-        }
-        .container {
-            display: flex;
-            height: calc(100vh - 62px);
-        }
+        header h1 { font-size: 1.3rem; color: #e94560; font-weight: 700; }
+        header span { color: #888; font-size: 0.85rem; }
+        .container { display: flex; height: calc(100vh - 54px); }
+
+        /* ── Sidebar ── */
         .sidebar {
-            width: 340px;
-            min-width: 260px;
-            background: #13151b;
-            border-right: 1px solid #222;
-            display: flex;
-            flex-direction: column;
+            width: 280px; min-width: 220px; background: #13151b;
+            border-right: 1px solid #222; display: flex; flex-direction: column;
         }
         .sidebar h2 {
-            padding: 1rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #888;
-            border-bottom: 1px solid #222;
+            padding: 0.8rem 1rem; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #888; border-bottom: 1px solid #222;
         }
-        .pipeline-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0.5rem;
-        }
+        .pipeline-list { flex: 1; overflow-y: auto; padding: 0.4rem; }
         .pipeline-item {
-            padding: 0.6rem 0.8rem;
-            margin-bottom: 2px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-family: 'Cascadia Code', 'Fira Code', monospace;
-            transition: background 0.15s;
-            word-break: break-all;
+            padding: 0.45rem 0.6rem; margin-bottom: 1px; border-radius: 5px;
+            cursor: pointer; font-size: 0.78rem; font-family: 'Cascadia Code', 'Fira Code', monospace;
+            transition: background 0.15s; word-break: break-all;
         }
         .pipeline-item:hover { background: #1e2030; }
-        .pipeline-item.active {
-            background: #1a2744;
-            color: #5b9aff;
-            font-weight: 600;
-        }
-        .pipeline-item .ext {
-            display: inline-block;
-            font-size: 0.7rem;
-            padding: 1px 5px;
-            border-radius: 3px;
-            margin-right: 6px;
-            font-weight: 700;
+        .pipeline-item.active { background: #1a2744; color: #5b9aff; font-weight: 600; }
+        .ext {
+            display: inline-block; font-size: 0.65rem; padding: 1px 4px;
+            border-radius: 3px; margin-right: 5px; font-weight: 700;
         }
         .ext-slp { background: #0f3460; color: #5b9aff; }
         .ext-slt { background: #2d1a45; color: #c77dff; }
-        .content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+
+        /* ── Main area ── */
+        .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .main-header {
+            padding: 0.6rem 1.2rem; border-bottom: 1px solid #222;
+            font-size: 0.85rem; color: #aaa; display: flex; align-items: center; gap: 1rem;
+            flex-shrink: 0;
         }
-        .content-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #222;
-            font-size: 0.9rem;
-            color: #aaa;
+        .main-header strong { color: #e0e0e0; }
+        .pipeline-notes { color: #888; font-size: 0.8rem; font-style: italic; }
+        .main-body { flex: 1; display: flex; overflow: hidden; }
+
+        /* ── Graph canvas ── */
+        .graph-area {
+            flex: 1; overflow: hidden; position: relative; background: #0d0f14;
+            cursor: grab;
         }
-        .content-header strong { color: #e0e0e0; }
-        .json-view {
-            flex: 1;
-            overflow: auto;
-            padding: 1.5rem;
+        .graph-area.grabbing { cursor: grabbing; }
+        .graph-area svg { width: 100%; height: 100%; }
+
+        /* ── Detail panel ── */
+        .detail-panel {
+            width: 380px; max-width: 40vw; background: #13151b;
+            border-left: 1px solid #222; overflow-y: auto; padding: 1rem;
+            display: none; flex-direction: column; gap: 0.8rem;
         }
-        .json-view pre {
-            font-family: 'Cascadia Code', 'Fira Code', monospace;
-            font-size: 0.82rem;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-break: break-word;
+        .detail-panel.open { display: flex; }
+        .detail-panel h3 {
+            font-size: 1rem; color: #5b9aff; border-bottom: 1px solid #222;
+            padding-bottom: 0.4rem;
         }
+        .detail-close {
+            float: right; cursor: pointer; color: #888; font-size: 1.1rem;
+            background: none; border: none; padding: 2px 6px;
+        }
+        .detail-close:hover { color: #e94560; }
+        .detail-row { margin-bottom: 0.6rem; }
+        .detail-label {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+            color: #666; margin-bottom: 2px;
+        }
+        .detail-value {
+            font-size: 0.82rem; color: #ccc; line-height: 1.5;
+        }
+        .detail-value code {
+            background: #1a1d26; padding: 1px 4px; border-radius: 3px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.78rem;
+        }
+        .detail-value pre {
+            background: #1a1d26; padding: 0.5rem; border-radius: 5px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.75rem;
+            overflow-x: auto; white-space: pre-wrap; line-height: 1.5; color: #bbb;
+        }
+        .mapping-table {
+            width: 100%; border-collapse: collapse; font-size: 0.75rem;
+        }
+        .mapping-table th {
+            text-align: left; padding: 4px 6px; color: #888; border-bottom: 1px solid #333;
+            font-weight: 600;
+        }
+        .mapping-table td {
+            padding: 3px 6px; border-bottom: 1px solid #1e2030; color: #aaa;
+            word-break: break-all;
+        }
+        .mapping-table td code { background: #1a1d26; padding: 1px 3px; border-radius: 2px; font-size: 0.72rem; }
+        .badge {
+            display: inline-block; font-size: 0.65rem; padding: 2px 6px;
+            border-radius: 3px; font-weight: 700; margin-right: 4px;
+        }
+
+        /* ── Node / edge colours ── */
+        .node-box { rx: 8; ry: 8; stroke-width: 2; }
+        .cat-Transform { fill: #162040; stroke: #3b6fcf; }
+        .cat-Flow { fill: #1a2e1a; stroke: #4caf50; }
+        .cat-Database { fill: #2d1a45; stroke: #9c27b0; }
+        .cat-REST { fill: #2d2a15; stroke: #ff9800; }
+        .cat-Read { fill: #15292d; stroke: #00bcd4; }
+        .cat-Write { fill: #2d1520; stroke: #e91e63; }
+        .cat-Cloud { fill: #152d2a; stroke: #26a69a; }
+        .cat-Script { fill: #2d2515; stroke: #cddc39; }
+        .cat-Unknown { fill: #1e1e1e; stroke: #666; }
+
+        .node-group { cursor: pointer; }
+        .node-group:hover .node-box { filter: brightness(1.3); }
+        .node-group.selected .node-box { stroke-width: 3; filter: brightness(1.4); }
+
+        .edge-normal { stroke: #3a4060; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+        .edge-error { stroke: #c0392b; stroke-width: 2; fill: none; stroke-dasharray: 6,3; marker-end: url(#arrow-error); }
+
+        .node-label {
+            fill: #ddd; font-size: 11px; font-family: 'Segoe UI', system-ui, sans-serif;
+            pointer-events: none;
+        }
+        .node-type-label {
+            fill: #777; font-size: 9px; font-family: 'Segoe UI', system-ui, sans-serif;
+            pointer-events: none;
+        }
+
+        /* ── Task view ── */
+        .task-view { padding: 2rem; overflow-y: auto; flex: 1; }
+        .task-card {
+            background: #161820; border: 1px solid #222; border-radius: 10px;
+            padding: 1.5rem; max-width: 600px;
+        }
+        .task-card h3 { color: #c77dff; margin-bottom: 1rem; }
+
+        /* ── Placeholder ── */
         .placeholder {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #555;
-            font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            height: 100%; color: #444; font-size: 1rem;
         }
         .loading { color: #5b9aff; }
-        .error { color: #e94560; }
+        .error-msg { color: #e94560; }
 
-        /* JSON syntax highlighting */
-        .json-key { color: #5b9aff; }
-        .json-string { color: #98c379; }
-        .json-number { color: #d19a66; }
-        .json-bool { color: #c678dd; }
-        .json-null { color: #888; }
+        /* ── Zoom controls ── */
+        .zoom-controls {
+            position: absolute; bottom: 12px; right: 12px;
+            display: flex; gap: 4px; z-index: 10;
+        }
+        .zoom-btn {
+            width: 32px; height: 32px; border: 1px solid #333; background: #1a1d26;
+            color: #aaa; border-radius: 6px; cursor: pointer; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .zoom-btn:hover { background: #252830; color: #fff; }
     </style>
 </head>
 <body>
     <header>
         <h1>Master of Puppets</h1>
-        <span>SnapLogic Pipeline Viewer</span>
+        <span>SnapLogic Pipeline Explorer</span>
     </header>
     <div class="container">
         <aside class="sidebar">
@@ -136,88 +186,364 @@
                 <div class="placeholder">Loading...</div>
             </div>
         </aside>
-        <main class="content">
-            <div class="content-header" id="contentHeader">
-                Select a pipeline from the list
+        <div class="main-area">
+            <div class="main-header" id="mainHeader">Select a pipeline from the list</div>
+            <div class="main-body" id="mainBody">
+                <div class="placeholder" style="flex:1">&#8592; Choose a pipeline to explore</div>
             </div>
-            <div class="json-view" id="jsonView">
-                <div class="placeholder">← Choose a pipeline to view its JSON</div>
-            </div>
-        </main>
+        </div>
     </div>
 
-    <script>
-        const API_BASE = '/api';
+<script>
+const API = '/api';
 
-        function syntaxHighlight(json) {
-            const str = JSON.stringify(json, null, 2);
-            return str.replace(
-                /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
-                function (match) {
-                    let cls = 'json-number';
-                    if (/^"/.test(match)) {
-                        cls = /:$/.test(match) ? 'json-key' : 'json-string';
-                    } else if (/true|false/.test(match)) {
-                        cls = 'json-bool';
-                    } else if (/null/.test(match)) {
-                        cls = 'json-null';
-                    }
-                    return '<span class="' + cls + '">' + match + '</span>';
-                }
-            );
+// ────────────────────── Sidebar ──────────────────────
+async function loadPipelines() {
+    const list = document.getElementById('pipelineList');
+    try {
+        const res = await fetch(`${API}/pipelines`);
+        const items = await res.json();
+        if (!items.length) { list.innerHTML = '<div class="placeholder">No pipelines</div>'; return; }
+        list.innerHTML = '';
+        items.forEach(name => {
+            const el = document.createElement('div');
+            el.className = 'pipeline-item';
+            const ext = name.split('.').pop();
+            el.innerHTML = `<span class="ext ext-${ext}">${ext.toUpperCase()}</span>${esc(name)}`;
+            el.addEventListener('click', () => selectPipeline(name, el));
+            list.appendChild(el);
+        });
+    } catch { list.innerHTML = '<div class="placeholder error-msg">Failed to load</div>'; }
+}
+
+async function selectPipeline(name, el) {
+    document.querySelectorAll('.pipeline-item').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+    const header = document.getElementById('mainHeader');
+    const body = document.getElementById('mainBody');
+    header.innerHTML = `<strong>${esc(name)}</strong>`;
+    body.innerHTML = '<div class="placeholder loading" style="flex:1">Loading...</div>';
+    try {
+        const res = await fetch(`${API}/pipelines/${encodeURIComponent(name)}/parsed`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (data.type === 'task') renderTask(data, header, body);
+        else renderPipeline(data, header, body);
+    } catch (e) {
+        body.innerHTML = `<div class="placeholder error-msg" style="flex:1">${esc(e.message)}</div>`;
+    }
+}
+
+// ────────────────────── Task rendering ──────────────────────
+function renderTask(data, header, body) {
+    header.innerHTML = `<strong>${esc(data.jobName || 'Task')}</strong> <span class="badge" style="background:#2d1a45;color:#c77dff">TASK</span>`;
+    const p = data.parameters || {};
+    const s = data.schedule || {};
+    body.innerHTML = `<div class="task-view"><div class="task-card">
+        <h3>${esc(data.jobName || '')}</h3>
+        <div class="detail-row"><div class="detail-label">Trigger Type</div><div class="detail-value">${esc(data.triggerType || '-')}</div></div>
+        <div class="detail-row"><div class="detail-label">Pipeline</div><div class="detail-value"><code>${esc(p.pipeline_path || '-')}</code></div></div>
+        <div class="detail-row"><div class="detail-label">Snaplex</div><div class="detail-value"><code>${esc(p.snaplex_path || '-')}</code></div></div>
+        <div class="detail-row"><div class="detail-label">Schedule</div><div class="detail-value">${esc(s.start_date || '')} ${esc(s.start_time || '')} (${esc(s.time_zone || '')})<br>Repeat every ${s.repeat?.every || '?'} ${s.repeat?.by || ''}</div></div>
+        <div class="detail-row"><div class="detail-label">Enabled</div><div class="detail-value">${p.enabled ? 'Yes' : 'No'}</div></div>
+        ${data.note ? `<div class="detail-row"><div class="detail-label">Note</div><div class="detail-value">${esc(data.note)}</div></div>` : ''}
+    </div></div>`;
+}
+
+// ────────────────────── Pipeline graph rendering ──────────────────────
+const NODE_W = 180, NODE_H = 56, GRID = 100, PAD = 60;
+let currentData = null, panState = null, svgEl = null, gWorld = null;
+let transform = { x: 0, y: 0, k: 1 };
+
+function renderPipeline(data, header, body) {
+    currentData = data;
+    const meta = data.metadata || {};
+    let hdr = `<strong>${esc(header.querySelector('strong')?.textContent || '')}</strong>`;
+    if (meta.notes) hdr += ` <span class="pipeline-notes">${esc(meta.notes)}</span>`;
+    header.innerHTML = hdr;
+
+    body.innerHTML = `
+        <div class="graph-area" id="graphArea">
+            <svg id="graphSvg">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+                        markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a4060"/>
+                    </marker>
+                    <marker id="arrow-error" viewBox="0 0 10 10" refX="10" refY="5"
+                        markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c0392b"/>
+                    </marker>
+                </defs>
+                <g id="world"></g>
+            </svg>
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomBy(1.3)" title="Zoom in">+</button>
+                <button class="zoom-btn" onclick="zoomBy(0.77)" title="Zoom out">&minus;</button>
+                <button class="zoom-btn" onclick="zoomFit()" title="Fit">&#8689;</button>
+            </div>
+        </div>
+        <div class="detail-panel" id="detailPanel"></div>`;
+
+    svgEl = document.getElementById('graphSvg');
+    gWorld = document.getElementById('world');
+    transform = { x: PAD, y: PAD, k: 1 };
+
+    drawGraph(data);
+    setupPanZoom();
+    setTimeout(zoomFit, 50);
+}
+
+function drawGraph(data) {
+    gWorld.innerHTML = '';
+    const nodeMap = {};
+    const nodePositions = {};
+
+    // Compute positions from grid
+    data.nodes.forEach(n => {
+        const x = n.gridX * GRID;
+        const y = n.gridY * GRID;
+        nodePositions[n.id] = { x, y };
+        nodeMap[n.id] = n;
+    });
+
+    // Draw edges first (behind nodes)
+    data.edges.forEach(e => {
+        const src = nodePositions[e.source];
+        const dst = nodePositions[e.target];
+        if (!src || !dst) return;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', edgePath(src, dst));
+        path.setAttribute('class', e.isError ? 'edge-error' : 'edge-normal');
+        path.dataset.edgeId = e.id;
+        path.dataset.src = e.source;
+        path.dataset.dst = e.target;
+        gWorld.appendChild(path);
+    });
+
+    // Draw nodes
+    data.nodes.forEach(n => {
+        const pos = nodePositions[n.id];
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'node-group');
+        g.setAttribute('transform', `translate(${pos.x}, ${pos.y})`);
+        g.dataset.nodeId = n.id;
+
+        const catClass = 'cat-' + (n.category || 'Unknown');
+        const rect = svgNS('rect', {
+            class: `node-box ${catClass}`, x: -NODE_W/2, y: -NODE_H/2,
+            width: NODE_W, height: NODE_H
+        });
+        g.appendChild(rect);
+
+        // Label (snap name)
+        const label = svgNS('text', { class: 'node-label', x: 0, y: -4, 'text-anchor': 'middle' });
+        label.textContent = truncate(n.label, 22);
+        g.appendChild(label);
+
+        // Type sublabel
+        const typeLabel = svgNS('text', { class: 'node-type-label', x: 0, y: 12, 'text-anchor': 'middle' });
+        typeLabel.textContent = n.type;
+        g.appendChild(typeLabel);
+
+        // Click to show details
+        g.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            showNodeDetail(n);
+            document.querySelectorAll('.node-group').forEach(ng => ng.classList.remove('selected'));
+            g.classList.add('selected');
+        });
+
+        // Drag
+        makeDraggable(g, nodePositions, n.id, data.edges);
+
+        gWorld.appendChild(g);
+    });
+}
+
+function edgePath(src, dst) {
+    const sx = src.x, sy = src.y, dx = dst.x, dy = dst.y;
+    const mx = (sx + dx) / 2;
+    // Use cubic bezier
+    if (Math.abs(sy - dy) < 10) {
+        // Mostly horizontal
+        return `M${sx + NODE_W/2},${sy} C${mx},${sy} ${mx},${dy} ${dx - NODE_W/2},${dy}`;
+    }
+    return `M${sx + NODE_W/2},${sy} C${sx + NODE_W/2 + 40},${sy} ${dx - NODE_W/2 - 40},${dy} ${dx - NODE_W/2},${dy}`;
+}
+
+function updateEdges(nodePositions, edges) {
+    edges.forEach(e => {
+        const path = gWorld.querySelector(`[data-edge-id="${e.id}"]`);
+        if (!path) return;
+        const src = nodePositions[e.source];
+        const dst = nodePositions[e.target];
+        if (src && dst) path.setAttribute('d', edgePath(src, dst));
+    });
+}
+
+// ────────────────────── Draggable nodes ──────────────────────
+function makeDraggable(g, positions, nodeId, edges) {
+    let dragging = false, startMouse = null, startPos = null;
+    g.addEventListener('mousedown', (ev) => {
+        if (ev.button !== 0) return;
+        dragging = true;
+        startMouse = { x: ev.clientX, y: ev.clientY };
+        startPos = { ...positions[nodeId] };
+        ev.stopPropagation();
+        const onMove = (ev2) => {
+            if (!dragging) return;
+            const dx = (ev2.clientX - startMouse.x) / transform.k;
+            const dy = (ev2.clientY - startMouse.y) / transform.k;
+            positions[nodeId] = { x: startPos.x + dx, y: startPos.y + dy };
+            g.setAttribute('transform', `translate(${positions[nodeId].x}, ${positions[nodeId].y})`);
+            updateEdges(positions, edges);
+        };
+        const onUp = () => { dragging = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+    });
+}
+
+// ────────────────────── Pan & Zoom ──────────────────────
+function setupPanZoom() {
+    const area = document.getElementById('graphArea');
+    // Pan
+    area.addEventListener('mousedown', (ev) => {
+        if (ev.target.closest('.node-group') || ev.target.closest('.zoom-btn')) return;
+        area.classList.add('grabbing');
+        const start = { x: ev.clientX, y: ev.clientY, tx: transform.x, ty: transform.y };
+        const onMove = (e2) => {
+            transform.x = start.tx + (e2.clientX - start.x);
+            transform.y = start.ty + (e2.clientY - start.y);
+            applyTransform();
+        };
+        const onUp = () => { area.classList.remove('grabbing'); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+    });
+    // Zoom with wheel
+    area.addEventListener('wheel', (ev) => {
+        ev.preventDefault();
+        const factor = ev.deltaY < 0 ? 1.12 : 0.89;
+        const rect = svgEl.getBoundingClientRect();
+        const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+        transform.x = mx - (mx - transform.x) * factor;
+        transform.y = my - (my - transform.y) * factor;
+        transform.k *= factor;
+        applyTransform();
+    }, { passive: false });
+    // Click on background to deselect
+    area.addEventListener('click', (ev) => {
+        if (!ev.target.closest('.node-group')) {
+            document.querySelectorAll('.node-group').forEach(g => g.classList.remove('selected'));
+            document.getElementById('detailPanel').classList.remove('open');
         }
+    });
+}
 
-        async function loadPipelines() {
-            const list = document.getElementById('pipelineList');
-            try {
-                const res = await fetch(`${API_BASE}/pipelines`);
-                const pipelines = await res.json();
-                if (pipelines.length === 0) {
-                    list.innerHTML = '<div class="placeholder">No pipelines found</div>';
-                    return;
-                }
-                list.innerHTML = '';
-                pipelines.forEach(name => {
-                    const item = document.createElement('div');
-                    item.className = 'pipeline-item';
-                    const ext = name.split('.').pop();
-                    const extClass = ext === 'slp' ? 'ext-slp' : 'ext-slt';
-                    item.innerHTML = `<span class="ext ${extClass}">${ext.toUpperCase()}</span>${name}`;
-                    item.addEventListener('click', () => selectPipeline(name, item));
-                    list.appendChild(item);
-                });
-            } catch (e) {
-                list.innerHTML = `<div class="placeholder error">Failed to load pipelines</div>`;
-            }
-        }
+function applyTransform() {
+    gWorld.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.k})`);
+}
+function zoomBy(f) {
+    const rect = svgEl.getBoundingClientRect();
+    const cx = rect.width / 2, cy = rect.height / 2;
+    transform.x = cx - (cx - transform.x) * f;
+    transform.y = cy - (cy - transform.y) * f;
+    transform.k *= f;
+    applyTransform();
+}
+function zoomFit() {
+    if (!currentData || !currentData.nodes.length) return;
+    const rect = svgEl.getBoundingClientRect();
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    currentData.nodes.forEach(n => {
+        const x = n.gridX * GRID, y = n.gridY * GRID;
+        minX = Math.min(minX, x - NODE_W/2); maxX = Math.max(maxX, x + NODE_W/2);
+        minY = Math.min(minY, y - NODE_H/2); maxY = Math.max(maxY, y + NODE_H/2);
+    });
+    const gW = maxX - minX + PAD*2, gH = maxY - minY + PAD*2;
+    const k = Math.min(rect.width / gW, rect.height / gH, 1.5);
+    transform.k = k;
+    transform.x = (rect.width - gW * k) / 2 - minX * k + PAD * k;
+    transform.y = (rect.height - gH * k) / 2 - minY * k + PAD * k;
+    applyTransform();
+}
 
-        async function selectPipeline(name, element) {
-            document.querySelectorAll('.pipeline-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
+// ────────────────────── Node detail panel ──────────────────────
+function showNodeDetail(node) {
+    const panel = document.getElementById('detailPanel');
+    panel.classList.add('open');
+    const catColors = { Transform:'#3b6fcf', Flow:'#4caf50', Database:'#9c27b0', REST:'#ff9800', Read:'#00bcd4', Write:'#e91e63', Cloud:'#26a69a', Script:'#cddc39' };
+    const color = catColors[node.category] || '#888';
+    let html = `<button class="detail-close" onclick="document.getElementById('detailPanel').classList.remove('open');document.querySelectorAll('.node-group').forEach(g=>g.classList.remove('selected'))">&times;</button>`;
+    html += `<h3 style="color:${color}">${esc(node.label)}</h3>`;
+    html += row('Type', `<span class="badge" style="background:${color}22;color:${color}">${esc(node.category)}</span> ${esc(node.type)}`);
+    html += row('Snap Class', `<code>${esc(node.classId)}</code>`);
+    if (node.notes) html += row('Description', esc(node.notes));
+    html += row('Error Handling', `<code>${esc(node.settings.errorBehavior || 'fail')}</code>`);
 
-            const header = document.getElementById('contentHeader');
-            const view = document.getElementById('jsonView');
+    const s = node.settings;
+    if (s.account) html += row('Account', `<code>${esc(s.account)}</code>`);
+    if (s.pipeline) html += row('Calls Pipeline', `<code>${esc(s.pipeline)}</code>`);
+    if (s.url) html += row('URL', `<code>${esc(s.url)}</code>`);
+    if (s.httpMethod) html += row('HTTP Method', esc(s.httpMethod));
+    if (s.tableName) html += row('DynamoDB Table', `<code>${esc(s.tableName)}</code>`);
+    if (s.keyCondition) html += row('Key Condition', `<code>${esc(s.keyCondition)}</code>`);
+    if (s.content) html += row('Generator Content', `<pre>${esc(s.content)}</pre>`);
 
-            header.innerHTML = `Viewing: <strong>${escapeHtml(name)}</strong>`;
-            view.innerHTML = '<div class="placeholder loading">Loading...</div>';
+    if (s.mappings && s.mappings.length) {
+        html += `<div class="detail-row"><div class="detail-label">Mappings (${s.mappings.length})</div>`;
+        html += `<table class="mapping-table"><tr><th>Expression</th><th>Target</th></tr>`;
+        s.mappings.forEach(m => {
+            html += `<tr><td><code>${esc(m.expression || '')}</code></td><td><code>${esc(m.target || '')}</code></td></tr>`;
+        });
+        html += `</table></div>`;
+    }
 
-            try {
-                const res = await fetch(`${API_BASE}/pipelines/${encodeURIComponent(name)}`);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                view.innerHTML = `<pre>${syntaxHighlight(data)}</pre>`;
-            } catch (e) {
-                view.innerHTML = `<div class="placeholder error">Error: ${escapeHtml(e.message)}</div>`;
-            }
-        }
+    if (s.conditions && s.conditions.length) {
+        html += `<div class="detail-row"><div class="detail-label">Conditions (${s.conditions.length})</div>`;
+        html += `<table class="mapping-table"><tr><th>If</th><th>Then</th><th>Target</th></tr>`;
+        s.conditions.forEach(c => {
+            html += `<tr><td><code>${esc(c.if || '')}</code></td><td><code>${esc(c.then || '')}</code></td><td><code>${esc(c.target || '')}</code></td></tr>`;
+        });
+        html += `</table></div>`;
+    }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+    if (s.constraints && s.constraints.length) {
+        html += `<div class="detail-row"><div class="detail-label">Validation Constraints</div>`;
+        html += `<table class="mapping-table"><tr><th>Path</th><th>Constraint</th><th>Value</th></tr>`;
+        s.constraints.forEach(c => {
+            html += `<tr><td><code>${esc(c.path || '')}</code></td><td>${esc(c.constraint || '')}</td><td>${esc(c.value || '')}</td></tr>`;
+        });
+        html += `</table></div>`;
+    }
 
-        loadPipelines();
-    </script>
+    if (s.params && s.params.length) {
+        html += `<div class="detail-row"><div class="detail-label">Pipeline Parameters</div>`;
+        html += `<table class="mapping-table"><tr><th>Name</th><th>Value</th></tr>`;
+        s.params.forEach(p => {
+            html += `<tr><td><code>${esc(p.name || '')}</code></td><td><code>${esc(String(p.value ?? ''))}</code></td></tr>`;
+        });
+        html += `</table></div>`;
+    }
+
+    if (s.passThrough !== undefined) html += row('Pass-Through', s.passThrough ? 'Yes' : 'No');
+
+    panel.innerHTML = html;
+}
+
+// ────────────────────── Helpers ──────────────────────
+function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+function truncate(s, max) { return s && s.length > max ? s.substring(0, max - 1) + '…' : (s || ''); }
+function row(label, value) { return `<div class="detail-row"><div class="detail-label">${label}</div><div class="detail-value">${value}</div></div>`; }
+function svgNS(tag, attrs) {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+    return el;
+}
+
+loadPipelines();
+</script>
 </body>
 </html>
